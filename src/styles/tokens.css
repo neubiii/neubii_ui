@@ -1,0 +1,49 @@
+:root {
+  /* Primitive colors */
+  --nui-color-white: #ffffff;
+  --nui-color-gray-300: #d1d5db;
+  --nui-color-gray-800: #1f2937;
+  --nui-color-blue-600: #2563eb;
+
+  /* Semantic colors */
+  --nui-color-text-default: var(--nui-color-gray-800);
+  --nui-color-surface-default: var(--nui-color-white);
+
+  --nui-color-action-primary-bg: var(--nui-color-gray-800);
+  --nui-color-action-primary-text: var(--nui-color-white);
+
+  --nui-color-action-secondary-bg: var(--nui-color-white);
+  --nui-color-action-secondary-text: var(--nui-color-gray-800);
+  --nui-color-action-secondary-border: var(--nui-color-gray-300);
+
+  --nui-color-action-ghost-text: var(--nui-color-gray-800);
+
+  --nui-color-focus-ring: var(--nui-color-blue-600);
+
+  /* Typography */
+  --nui-font-family-sans: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+
+  --nui-font-weight-semibold: 600;
+
+  /* Shape */
+  --nui-radius-md: 0.375rem;
+
+  /* Control sizing */
+  --nui-control-height-sm: 2rem;
+  --nui-control-height-md: 2.5rem;
+  --nui-control-height-lg: 3rem;
+
+  --nui-control-padding-block-sm: 0.375rem;
+  --nui-control-padding-inline-sm: 0.75rem;
+
+  --nui-control-padding-block-md: 0.5rem;
+  --nui-control-padding-inline-md: 1rem;
+
+  --nui-control-padding-block-lg: 0.625rem;
+  --nui-control-padding-inline-lg: 1.25rem;
+
+  /* Interaction states */
+  --nui-opacity-disabled: 0.5;
+  --nui-focus-ring-width: 0.1875rem;
+  --nui-focus-ring-offset: 0.125rem;
+}
