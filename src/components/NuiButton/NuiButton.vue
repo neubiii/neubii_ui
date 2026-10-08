@@ -33,49 +33,58 @@ const emit = defineEmits<{
   align-items: center;
   justify-content: center;
   border: 1px solid transparent;
-  border-radius: 6px;
+  border-radius: var(--nui-radius-md);
   cursor: pointer;
-  font-weight: 600;
+  font-weight: var(--nui-font-weight-semibold);
 }
 
 .nui-button--sm {
-  min-height: 32px;
-  padding: 6px 12px;
+  min-height: var(--nui-control-height-sm);
+  padding:
+    var(--nui-control-padding-block-sm)
+    var(--nui-control-padding-inline-sm);
 }
 
 .nui-button--md {
-  min-height: 40px;
-  padding: 8px 16px;
+  min-height: var(--nui-control-height-md);
+  padding:
+    var(--nui-control-padding-block-md)
+    var(--nui-control-padding-inline-md);
 }
 
 .nui-button--lg {
-  min-height: 48px;
-  padding: 10px 20px;
+  min-height: var(--nui-control-height-lg);
+  padding:
+    var(--nui-control-padding-block-lg)
+    var(--nui-control-padding-inline-lg);
 }
 
 .nui-button--primary {
-  background: #1f2937;
-  color: white;
+  background: var(--nui-color-action-primary-bg);
+  color: var(--nui-color-action-primary-text);
 }
 
 .nui-button--secondary {
-  border-color: #d1d5db;
-  background: white;
-  color: #1f2937;
+  border-color: var(--nui-color-action-secondary-border);
+  background: var(--nui-color-action-secondary-bg);
+  color: var(--nui-color-action-secondary-text);
 }
 
 .nui-button--ghost {
   background: transparent;
-  color: #1f2937;
+  color: var(--nui-color-action-ghost-text);
 }
 
 .nui-button:focus-visible {
-  outline: 3px solid #2563eb;
-  outline-offset: 2px;
+  outline:
+    var(--nui-focus-ring-width)
+    solid
+    var(--nui-color-focus-ring);
+  outline-offset: var(--nui-focus-ring-offset);
 }
 
 .nui-button:disabled {
   cursor: not-allowed;
-  opacity: 0.5;
+  opacity: var(--nui-opacity-disabled);
 }
 </style>
