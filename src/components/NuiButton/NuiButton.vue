@@ -35,6 +35,9 @@ const emit = defineEmits<{
   border: 1px solid transparent;
   border-radius: var(--nui-radius-md);
   cursor: pointer;
+
+  font: inherit;
+  font-family: var(--nui-font-family-sans);
   font-weight: var(--nui-font-weight-semibold);
 }
 
