@@ -8,3 +8,6 @@ export type {
   NuiButtonType,
   NuiButtonVariant,
 } from './components/NuiButton'
+
+export { NuiInput } from './components/NuiInput'
+export type { NuiInputProps, NuiInputSize, NuiInputType } from './components/NuiInput'
