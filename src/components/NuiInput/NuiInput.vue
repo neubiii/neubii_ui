@@ -36,26 +36,29 @@ const props = withDefaults(defineProps<NuiInputProps>(), {
   background: var(--nui-color-field-bg);
   color: var(--nui-color-text-default);
 
-  font: inherit;
   font-family: var(--nui-font-family-sans);
+  font-size: var(--nui-control-font-size);
+  font-weight: var(--nui-font-weight-regular);
+  font-style: normal;
+  line-height: var(--nui-control-line-height);
 }
 
 .nui-input--sm {
-  min-height: var(--nui-control-height-sm);
+  min-height: var(--nui-control-min-height-sm);
   padding:
     var(--nui-control-padding-block-sm)
     var(--nui-control-padding-inline-sm);
 }
 
 .nui-input--md {
-  min-height: var(--nui-control-height-md);
+  min-height: var(--nui-control-min-height-md);
   padding:
     var(--nui-control-padding-block-md)
     var(--nui-control-padding-inline-md);
 }
 
 .nui-input--lg {
-  min-height: var(--nui-control-height-lg);
+  min-height: var(--nui-control-min-height-lg);
   padding:
     var(--nui-control-padding-block-lg)
     var(--nui-control-padding-inline-lg);
