@@ -36,27 +36,29 @@ const emit = defineEmits<{
   border-radius: var(--nui-radius-md);
   cursor: pointer;
 
-  font: inherit;
   font-family: var(--nui-font-family-sans);
+  font-size: var(--nui-control-font-size);
   font-weight: var(--nui-font-weight-semibold);
+  font-style: normal;
+  line-height: var(--nui-control-line-height);
 }
 
 .nui-button--sm {
-  min-height: var(--nui-control-height-sm);
+  min-height: var(--nui-control-min-height-sm);
   padding:
     var(--nui-control-padding-block-sm)
     var(--nui-control-padding-inline-sm);
 }
 
 .nui-button--md {
-  min-height: var(--nui-control-height-md);
+  min-height: var(--nui-control-min-height-md);
   padding:
     var(--nui-control-padding-block-md)
     var(--nui-control-padding-inline-md);
 }
 
 .nui-button--lg {
-  min-height: var(--nui-control-height-lg);
+  min-height: var(--nui-control-min-height-lg);
   padding:
     var(--nui-control-padding-block-lg)
     var(--nui-control-padding-inline-lg);
