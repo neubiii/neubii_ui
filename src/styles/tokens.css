@@ -1,9 +1,13 @@
 :root {
   /* Primitive colors */
   --nui-color-white: #ffffff;
+  --nui-color-gray-100: #f3f4f6;
   --nui-color-gray-300: #d1d5db;
+  --nui-color-gray-500: #6b7280;
+  --nui-color-gray-600: #4b5563;
   --nui-color-gray-800: #1f2937;
   --nui-color-blue-600: #2563eb;
+  --nui-color-red-600: #dc2626;
 
   /* Semantic colors */
   --nui-color-text-default: var(--nui-color-gray-800);
@@ -17,6 +21,12 @@
   --nui-color-action-secondary-border: var(--nui-color-gray-300);
 
   --nui-color-action-ghost-text: var(--nui-color-gray-800);
+
+  --nui-color-field-bg: var(--nui-color-white);
+  --nui-color-field-bg-readonly: var(--nui-color-gray-100);
+  --nui-color-field-border: var(--nui-color-gray-500);
+  --nui-color-field-border-invalid: var(--nui-color-red-600);
+  --nui-color-field-placeholder: var(--nui-color-gray-600);
 
   --nui-color-focus-ring: var(--nui-color-blue-600);
 
