@@ -1,86 +1,84 @@
 # neubii_ui
 
-A growing Vue 3 + TypeScript component system focused on typed component APIs, accessibility, design tokens, testing, documentation, and maintainable open-source engineering workflows.
-
 [![CI](https://github.com/neubiii/neubii_ui/actions/workflows/ci.yml/badge.svg)](https://github.com/neubiii/neubii_ui/actions/workflows/ci.yml)
 
-> This project is intentionally being built component by component. The goal is not to maximize component count, but to understand and document the engineering decisions behind a reusable UI system.
+A growing Vue 3 + TypeScript component and design system, built one component at a time.
 
-## Why this project exists
+The goal is not a large component catalog. Each component is treated as a small public contract: a typed API, native HTML semantics, accessibility decisions, design tokens, Storybook documentation and behavioral tests, all checked in CI.
 
-`neubii_ui` is a hands-on exploration of the space between frontend engineering and design systems.
+What makes it interesting to read:
 
-Rather than treating components as isolated pieces of UI, the project focuses on the systems around them:
+- **Native first.** Components render real `<button>` and `<input>` elements and rely on native disabled, readonly and required behavior instead of recreating it.
+- **Small, deliberate APIs.** Props describe component states. Composition happens through slots. Everything else falls through as native attributes.
+- **Token-driven styling.** Components consume semantic CSS custom properties, not raw colors.
+- **Documented trade-offs.** Stories and docs explain what the component handles and what stays the consumer's responsibility, such as naming an icon-only button.
 
-- predictable and typed public APIs
-- reusable design tokens
-- native HTML semantics and accessibility
-- isolated component documentation
-- meaningful unit tests
-- automated code-quality checks
-- feature-branch and pull-request workflows
-- reproducible CI
+> **Status:** under active development. Not yet published to npm, and the API may still change.
 
-The library is deliberately kept small while the foundations are being developed. New abstractions are introduced only when an actual component requirement justifies them.
+## Components
 
-## Current component
+### NuiButton
 
-### `NuiButton`
-
-The first reusable component establishes the conventions future components will follow.
+A native `<button>` with variants, sizes, a loading state and slot-based composition.
 
 ```vue
-<NuiButton variant="primary" size="md">
+<NuiButton :loading="isSaving">
+  <template #start>
+    <SaveIcon aria-hidden="true" />
+  </template>
+
   Save changes
 </NuiButton>
 ```
 
-Current API includes:
-
-- `primary`, `secondary`, and `ghost` variants
-- `sm`, `md`, and `lg` sizes
-- typed native `button`, `submit`, and `reset` types
-- native disabled behavior
-- typed click events
-- slot-based content
-- explicit keyboard focus styling
-- public TypeScript types
-
-Its implementation, tests, Storybook stories, types, and exports are colocated so the component can be understood as one unit.
-
-## Design-system architecture
-
-Visual decisions are separated from component implementation through CSS custom properties.
-
-```text
-raw value
-   ↓
-primitive token
-   ↓
-semantic token
-   ↓
-component
+```vue
+<NuiButton icon-only variant="ghost" aria-label="Close">
+  <CloseIcon aria-hidden="true" />
+</NuiButton>
 ```
 
-For example:
+- `primary`, `secondary` and `ghost` variants; `sm`, `md` and `lg` sizes
+- typed native `type`: `button` (default), `submit`, `reset`
+- native `disabled`
+- `loading`: natively disables the button, sets `aria-busy="true"` and shows a CSS spinner
+- stable loading layout: the label stays rendered underneath the spinner, so the button keeps its width and accessible name
+- spinner rotation is turned off under `prefers-reduced-motion: reduce`
+- `start`, `default` and `end` slots that accept any Vue content
+- `iconOnly`: compact, square-by-default sizing for icon-only buttons; the consumer provides the accessible name (`aria-label` or `aria-labelledby`)
+- native attribute fallthrough and a typed `click` event
 
-```text
-#1f2937
-   ↓
---nui-color-gray-800
-   ↓
---nui-color-action-primary-bg
-   ↓
-NuiButton
+There is no icon library and no `icon` prop. Icons are ordinary slot content.
+
+### NuiInput
+
+A native text-like `<input>` primitive.
+
+```vue
+<label for="email">Email</label>
+<NuiInput
+  id="email"
+  v-model="email"
+  type="email"
+  invalid
+  aria-describedby="email-error"
+/>
+<p id="email-error">Enter a complete email address.</p>
 ```
 
-Components consume semantic meaning rather than owning raw visual values. Consumers can therefore override the design-system variables without changing component source code.
+- `v-model` with a `string` value
+- `text`, `email`, `password`, `search`, `tel` and `url` types
+- `sm`, `md` and `lg` sizes
+- native `disabled`, `readonly` and `required`
+- `invalid` state that sets `aria-invalid="true"`
+- native attribute fallthrough (`autocomplete`, `aria-describedby`, …)
 
-The token system is intentionally small. New tokens are added when repeated component requirements prove that they belong in the shared system.
+NuiInput deliberately stays a primitive. It does not render a label, helper text or error message. Those are composed by the consumer, as in the example above, until a dedicated field component is justified.
 
-## Component structure
+## Architecture
 
-Each component owns the files needed to understand, document, verify, and expose it.
+### Component structure
+
+Each component keeps everything needed to understand it in one folder:
 
 ```text
 src/components/NuiButton/
@@ -92,50 +90,148 @@ src/components/NuiButton/
 └── index.ts
 ```
 
-This separates responsibilities clearly:
+```text
+.vue         → implementation
+.types.ts    → public TypeScript contract
+.stories.ts  → interactive documentation
+__tests__/   → behavioral contract
+index.ts     → public exports
+```
+
+`src/index.ts` is the library entry point. It re-exports components and their public types and imports the design tokens.
+
+### Design tokens
+
+Styling decisions live in CSS custom properties in `src/styles/tokens.css`, in two layers:
 
 ```text
-.vue         → component implementation
-.types.ts    → public TypeScript contract
-.stories.ts  → interactive documentation and states
-__tests__/   → behavioral verification
-index.ts     → public component exports
+primitive token          semantic token                   component
+--nui-color-gray-800  →  --nui-color-action-primary-bg  →  NuiButton
+--nui-color-red-600   →  --nui-color-field-border-invalid →  NuiInput
 ```
 
-## Storybook
+Components only reference semantic roles, so a theme can change what "primary action" or "invalid field" means without editing component CSS.
 
-Storybook is used as the component-development and documentation environment.
+Controls also share a small sizing and typography contract, so a button and an input of the same size line up:
 
-It provides isolated views of component variants and states, interactive Controls generated from the typed API, Autodocs, and automated accessibility analysis.
+- `--nui-control-min-height-{sm,md,lg}` and matching block and inline padding
+- `--nui-control-font-size` and `--nui-control-line-height`
+- `--nui-focus-ring-width`, `--nui-focus-ring-offset` and `--nui-color-focus-ring` for the visible focus outline
+- `--nui-opacity-disabled`
 
-```bash
-pnpm storybook
+New tokens are added only when more than one component needs the same decision.
+
+### Composition over configuration
+
+- Props describe meaningful component states.
+- Slots handle composition.
+- Native attributes stay available through Vue attribute fallthrough.
+- CSS custom properties carry design-system decisions.
+
+Button icons are a concrete example. This project avoids:
+
+```vue
+<NuiButton icon="save.svg" />
 ```
 
-Production Storybook builds can be verified with:
+and prefers:
 
-```bash
-pnpm build-storybook
+```vue
+<NuiButton>
+  <template #start>
+    <SaveIcon />
+  </template>
+
+  Save
+</NuiButton>
 ```
 
-The Storybook environment loads the design-system tokens without importing application-level reset styles. This helps expose accidental dependencies between reusable components and their host application.
+The library stays independent of any icon set, and the consumer keeps control over the icon's markup and accessibility attributes.
+
+## Accessibility
+
+Accessibility is treated as part of each component's API and reviewed through semantics, stories and automated checks. In practice:
+
+- native `<button>` and `<input>` elements, with native disabled, readonly and required semantics
+- a visible `:focus-visible` outline driven by shared focus tokens
+- `aria-busy` on loading buttons; `aria-invalid` on invalid inputs
+- icon-only buttons leave naming to the consumer, and the docs show how (`aria-label`)
+- slot content is never automatically hidden; stories mark decorative icons with `aria-hidden="true"`
+- Input stories pair the input with a `<label for>` and link visible error text with `aria-describedby`
+- the loading spinner respects `prefers-reduced-motion`
+- the Storybook accessibility addon checks each story in the Storybook UI
+
+Automated checks catch only a subset of issues, so they are not treated as proof of conformance.
 
 ## Testing and quality
 
-The project currently uses:
+| Tool | Purpose |
+| --- | --- |
+| Vitest + Vue Test Utils | behavioral unit tests |
+| TypeScript / `vue-tsc` | type-checking, including `.vue` files |
+| ESLint + oxlint | linting |
+| Storybook + a11y addon | component documentation; accessibility checks while browsing stories |
 
-- Vitest
-- Vue Test Utils
-- TypeScript / `vue-tsc`
-- ESLint
-- oxlint
-- Storybook accessibility checks
+Tests target public behavior: rendered semantics, attributes, emitted events and slot output. They don't target internal implementation details. NuiButton and NuiInput are currently covered by 30 unit tests.
 
-Unit tests focus on observable component behavior rather than implementation details.
+Storybook loads only the design tokens, not the playground's base styles. This exposes components that accidentally depend on host-application CSS.
 
-For `NuiButton`, tests currently verify slot rendering, defaults, variants and sizes, native button types, typed click events, and disabled behavior.
+### CI
 
-Run the main checks locally with:
+GitHub Actions (`.github/workflows/ci.yml`) runs on pull requests to `main` and on pushes to `main`:
+
+```text
+pnpm install --frozen-lockfile
+  ↓
+pnpm exec vitest run
+  ↓
+pnpm type-check
+  ↓
+pnpm lint:check
+  ↓
+pnpm build-only
+  ↓
+pnpm build-storybook
+```
+
+The workflow has read-only repository permissions. Dependency install scripts are not allowed globally: `pnpm-workspace.yaml` explicitly approves only `esbuild`'s build script.
+
+The Storybook accessibility addon is not part of CI; CI verifies that Storybook builds.
+
+## Engineering workflow
+
+```text
+main
+ ↓
+short-lived feature / refactor branch
+ ↓
+implementation
+ ↓
+local quality gates
+ ↓
+pull request
+ ↓
+GitHub Actions
+ ↓
+squash merge
+ ↓
+branch cleanup
+```
+
+## Getting started
+
+Requires Node.js `^22.18.0 || >=24.12.0` and pnpm.
+
+```bash
+git clone https://github.com/neubiii/neubii_ui.git
+cd neubii_ui
+pnpm install
+
+pnpm dev          # local playground (src/App.vue)
+pnpm storybook    # component workbench on port 6006
+```
+
+Quality gates (the same checks CI runs):
 
 ```bash
 pnpm exec vitest run
@@ -145,135 +241,49 @@ pnpm build-only
 pnpm build-storybook
 ```
 
-## Continuous integration
-
-GitHub Actions runs the same quality gates on pull requests and on `main`.
-
-The CI pipeline verifies:
-
-```text
-frozen dependency install
-        ↓
-unit tests
-        ↓
-TypeScript
-        ↓
-check-only linting
-        ↓
-application build
-        ↓
-Storybook build
-```
-
-Dependency installation uses pnpm's build-script approval mechanism rather than globally allowing dependency lifecycle scripts.
-
-## Engineering workflow
-
-Development happens on short-lived feature or fix branches.
-
-```text
-main
-  ↓
-feature branch
-  ↓
-implementation
-  ↓
-local quality checks
-  ↓
-pull request
-  ↓
-GitHub Actions
-  ↓
-squash merge
-  ↓
-main
-```
-
-Branches are deleted after merge. The branch represents a unit of work, not permanent ownership of a component.
-
-## Technology
-
-- Vue 3
-- Composition API and `<script setup>`
-- TypeScript
-- Vite
-- pnpm
-- CSS custom properties
-- Storybook
-- Vitest
-- Vue Test Utils
-- ESLint
-- oxlint
-- GitHub Actions
-
 ## Project structure
 
 ```text
 neubii_ui/
-├── .github/
-│   └── workflows/
-│       └── ci.yml
+├── .github/workflows/ci.yml
 ├── .storybook/
+│   ├── main.ts
+│   └── preview.ts
 ├── src/
 │   ├── components/
-│   │   └── NuiButton/
+│   │   ├── NuiButton/
+│   │   └── NuiInput/
 │   ├── styles/
-│   │   ├── base.css
-│   │   └── tokens.css
-│   ├── App.vue
-│   ├── index.ts
+│   │   ├── base.css        # playground-only reset
+│   │   └── tokens.css      # design tokens
+│   ├── App.vue             # playground
+│   ├── index.ts            # library entry point
 │   └── main.ts
 ├── package.json
-├── pnpm-lock.yaml
-└── vite.config.ts
+├── pnpm-workspace.yaml
+├── vite.config.ts
+└── vitest.config.ts
 ```
-
-## Local development
-
-Clone the repository and install dependencies:
-
-```bash
-git clone https://github.com/neubiii/neubii_ui.git
-cd neubii_ui
-pnpm install
-```
-
-Run the local Vue playground:
-
-```bash
-pnpm dev
-```
-
-Run Storybook:
-
-```bash
-pnpm storybook
-```
-
-## Current status
-
-The project is in active foundation development and is not yet published as a stable npm package.
-
-The current focus is establishing strong component conventions before expanding the library.
-
-Next areas of work include form controls, richer interactive components, further accessibility patterns, package distribution, versioning, and contribution documentation.
 
 ## Engineering principles
 
-**Prefer native semantics.** Use the platform before recreating behavior with JavaScript or ARIA.
+- **Prefer native semantics.** Use the platform before recreating behavior with JavaScript or ARIA.
+- **Keep public APIs intentional.** A prop must represent a real component state, not a CSS property.
+- **Compose, don't couple.** Slots instead of icon props; native attributes instead of wrapper props.
+- **Test behavior, not implementation.** Internal refactors shouldn't break tests.
+- **Add abstractions when requirements justify them.** For example, a spacing value shared by a single component stays local until a second component needs it.
+- **Stay independent of the host app.** Components must not rely on application resets or global styles.
+- **Let TypeScript make supported states discoverable.** Variants, sizes and types are typed unions, not free strings.
 
-**Keep APIs intentional.** Props should represent meaningful component behavior rather than exposing every CSS property.
+## Roadmap
 
-**Design for composition.** Slots and native attributes should remain useful escape hatches where appropriate.
+Current components: `NuiButton`, `NuiInput`.
 
-**Make invalid states difficult.** TypeScript should help consumers discover and use the supported API correctly.
+Likely next areas, in no fixed order:
 
-**Test behavior, not implementation.** Refactoring internal code should not unnecessarily break tests.
-
-**Add abstractions when evidence justifies them.** A smaller architecture that is understood is preferable to a large architecture built for hypothetical requirements.
-
-**Keep components independent from application assumptions.** Reusable components should not secretly rely on playground resets or host application styling.
-
----
-
-`neubii_ui` is an ongoing project. Components and architecture will evolve as new requirements expose where the current system works well and where it needs to change.
+- field composition (label, helper and error text around inputs)
+- additional form controls
+- library build and package distribution
+- versioning and release workflow
+- visual regression testing
+- contribution documentation

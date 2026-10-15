@@ -9,4 +9,6 @@ export interface NuiButtonProps {
   size?: NuiButtonSize
   type?: NuiButtonType
   disabled?: boolean
+  loading?: boolean
+  iconOnly?: boolean
 }
