@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { NuiButton, NuiInput } from './index'
+import { NuiButton, NuiInput, NuiTextarea } from './index'
 
 const email = ref('')
+const message = ref('')
 </script>
 
 <template>
@@ -24,6 +25,22 @@ const email = ref('')
         />
 
         <p>Current value: {{ email }}</p>
+      </div>
+    </section>
+
+    <section>
+      <h2>Textarea</h2>
+
+      <div class="stack">
+        <label for="playground-message">Message</label>
+
+        <NuiTextarea
+          id="playground-message"
+          v-model="message"
+          rows="4"
+        />
+
+        <p>Current value: {{ message }}</p>
       </div>
     </section>
 

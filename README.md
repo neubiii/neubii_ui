@@ -8,7 +8,7 @@ The goal is not a large component catalog. Each component is treated as a small 
 
 What makes it interesting to read:
 
-- **Native first.** Components render real `<button>` and `<input>` elements and rely on native disabled, readonly and required behavior instead of recreating it.
+- **Native first.** Components render real `<button>`, `<input>` and `<textarea>` elements and rely on native disabled, readonly and required behavior instead of recreating it.
 - **Small, deliberate APIs.** Props describe component states. Composition happens through slots. Everything else falls through as native attributes.
 - **Token-driven styling.** Components consume semantic CSS custom properties, not raw colors.
 - **Documented trade-offs.** Stories and docs explain what the component handles and what stays the consumer's responsibility, such as naming an icon-only button.
@@ -74,6 +74,24 @@ A native text-like `<input>` primitive.
 
 NuiInput deliberately stays a primitive. It does not render a label, helper text or error message. Those are composed by the consumer, as in the example above, until a dedicated field component is justified.
 
+### NuiTextarea
+
+A native `<textarea>` primitive for multiline text.
+
+```vue
+<label for="message">Message</label>
+<NuiTextarea id="message" v-model="message" rows="4" maxlength="500" />
+```
+
+- `v-model` with a `string` value
+- `sm`, `md` and `lg` sizes (padding only; height comes from native `rows`)
+- native `disabled`, `readonly` and `required`
+- `invalid` state that sets `aria-invalid="true"`
+- native resizing is left in place
+- native attribute fallthrough (`rows`, `maxlength`, `aria-describedby`, …)
+
+Like NuiInput, it does not render a label, helper text or error message.
+
 ## Architecture
 
 ### Component structure
@@ -114,7 +132,7 @@ Components only reference semantic roles, so a theme can change what "primary ac
 
 Controls also share a small sizing and typography contract, so a button and an input of the same size line up:
 
-- `--nui-control-min-height-{sm,md,lg}` and matching block and inline padding
+- `--nui-control-min-height-{sm,md,lg}` and matching block and inline padding (NuiTextarea uses the padding but not the single-line minimum heights)
 - `--nui-control-font-size` and `--nui-control-line-height`
 - `--nui-focus-ring-width`, `--nui-focus-ring-offset` and `--nui-color-focus-ring` for the visible focus outline
 - `--nui-opacity-disabled`
@@ -152,12 +170,12 @@ The library stays independent of any icon set, and the consumer keeps control ov
 
 Accessibility is treated as part of each component's API and reviewed through semantics, stories and automated checks. In practice:
 
-- native `<button>` and `<input>` elements, with native disabled, readonly and required semantics
+- native `<button>`, `<input>` and `<textarea>` elements, with native disabled, readonly and required semantics
 - a visible `:focus-visible` outline driven by shared focus tokens
-- `aria-busy` on loading buttons; `aria-invalid` on invalid inputs
+- `aria-busy` on loading buttons; `aria-invalid` on invalid inputs and textareas
 - icon-only buttons leave naming to the consumer, and the docs show how (`aria-label`)
 - slot content is never automatically hidden; stories mark decorative icons with `aria-hidden="true"`
-- Input stories pair the input with a `<label for>` and link visible error text with `aria-describedby`
+- Input and Textarea stories pair the control with a `<label for>` and link visible error text with `aria-describedby`
 - the loading spinner respects `prefers-reduced-motion`
 - the Storybook accessibility addon checks each story in the Storybook UI
 
@@ -172,7 +190,7 @@ Automated checks catch only a subset of issues, so they are not treated as proof
 | ESLint + oxlint | linting |
 | Storybook + a11y addon | component documentation; accessibility checks while browsing stories |
 
-Tests target public behavior: rendered semantics, attributes, emitted events and slot output. They don't target internal implementation details. NuiButton and NuiInput are currently covered by 30 unit tests.
+Tests target public behavior: rendered semantics, attributes, emitted events and slot output. They don't target internal implementation details. NuiButton, NuiInput and NuiTextarea are currently covered by 40 unit tests.
 
 Storybook loads only the design tokens, not the playground's base styles. This exposes components that accidentally depend on host-application CSS.
 
@@ -252,7 +270,8 @@ neubii_ui/
 ├── src/
 │   ├── components/
 │   │   ├── NuiButton/
-│   │   └── NuiInput/
+│   │   ├── NuiInput/
+│   │   └── NuiTextarea/
 │   ├── styles/
 │   │   ├── base.css        # playground-only reset
 │   │   └── tokens.css      # design tokens
@@ -277,7 +296,7 @@ neubii_ui/
 
 ## Roadmap
 
-Current components: `NuiButton`, `NuiInput`.
+Current components: `NuiButton`, `NuiInput`, `NuiTextarea`.
 
 Likely next areas, in no fixed order:
 
