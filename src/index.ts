@@ -14,3 +14,6 @@ export type { NuiInputProps, NuiInputSize, NuiInputType } from './components/Nui
 
 export { NuiTextarea } from './components/NuiTextarea'
 export type { NuiTextareaProps, NuiTextareaSize } from './components/NuiTextarea'
+
+export { NuiSelect } from './components/NuiSelect'
+export type { NuiSelectProps, NuiSelectSize } from './components/NuiSelect'

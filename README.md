@@ -8,7 +8,7 @@ The goal is not a large component catalog. Each component is treated as a small 
 
 What makes it interesting to read:
 
-- **Native first.** Components render real `<button>`, `<input>` and `<textarea>` elements and rely on native disabled, readonly and required behavior instead of recreating it.
+- **Native first.** Components render real `<button>`, `<input>`, `<textarea>` and `<select>` elements and rely on native disabled, readonly and required behavior instead of recreating it.
 - **Small, deliberate APIs.** Props describe component states. Composition happens through slots. Everything else falls through as native attributes.
 - **Token-driven styling.** Components consume semantic CSS custom properties, not raw colors.
 - **Documented trade-offs.** Stories and docs explain what the component handles and what stays the consumer's responsibility, such as naming an icon-only button.
@@ -92,6 +92,28 @@ A native `<textarea>` primitive for multiline text.
 
 Like NuiInput, it does not render a label, helper text or error message.
 
+### NuiSelect
+
+A native single-selection `<select>` primitive. Options are native `<option>` and `<optgroup>` elements in the default slot.
+
+```vue
+<label for="country">Country</label>
+<NuiSelect id="country" v-model="country">
+  <option value="" disabled>Select a country</option>
+  <option value="de">Germany</option>
+  <option value="in">India</option>
+</NuiSelect>
+```
+
+- required `v-model` with a `string` value: initialize it to an option's value, or to `''` with an empty-value prompt option as above
+- `sm`, `md` and `lg` sizes
+- native `disabled` and `required`
+- `invalid` state that sets `aria-invalid="true"`
+- native appearance, dropdown arrow and keyboard behavior are left in place
+- native attribute fallthrough (`form`, `autocomplete`, `aria-describedby`, …)
+
+There is no `options`, `placeholder` or `multiple` prop. Like NuiInput, it does not render a label, helper text or error message.
+
 ## Architecture
 
 ### Component structure
@@ -170,12 +192,12 @@ The library stays independent of any icon set, and the consumer keeps control ov
 
 Accessibility is treated as part of each component's API and reviewed through semantics, stories and automated checks. In practice:
 
-- native `<button>`, `<input>` and `<textarea>` elements, with native disabled, readonly and required semantics
+- native `<button>`, `<input>`, `<textarea>` and `<select>` elements, with native disabled, readonly and required semantics
 - a visible `:focus-visible` outline driven by shared focus tokens
-- `aria-busy` on loading buttons; `aria-invalid` on invalid inputs and textareas
+- `aria-busy` on loading buttons; `aria-invalid` on invalid inputs, textareas and selects
 - icon-only buttons leave naming to the consumer, and the docs show how (`aria-label`)
 - slot content is never automatically hidden; stories mark decorative icons with `aria-hidden="true"`
-- Input and Textarea stories pair the control with a `<label for>` and link visible error text with `aria-describedby`
+- Input, Textarea and Select stories pair the control with a `<label for>` and link visible error text with `aria-describedby`
 - the loading spinner respects `prefers-reduced-motion`
 - the Storybook accessibility addon checks each story in the Storybook UI
 
@@ -190,7 +212,7 @@ Automated checks catch only a subset of issues, so they are not treated as proof
 | ESLint + oxlint | linting |
 | Storybook + a11y addon | component documentation; accessibility checks while browsing stories |
 
-Tests target public behavior: rendered semantics, attributes, emitted events and slot output. They don't target internal implementation details. NuiButton, NuiInput and NuiTextarea are currently covered by 40 unit tests.
+Tests target public behavior: rendered semantics, attributes, emitted events and slot output. They don't target internal implementation details. NuiButton, NuiInput, NuiTextarea and NuiSelect are currently covered by 53 unit tests.
 
 Storybook loads only the design tokens, not the playground's base styles. This exposes components that accidentally depend on host-application CSS.
 
@@ -271,6 +293,7 @@ neubii_ui/
 │   ├── components/
 │   │   ├── NuiButton/
 │   │   ├── NuiInput/
+│   │   ├── NuiSelect/
 │   │   └── NuiTextarea/
 │   ├── styles/
 │   │   ├── base.css        # playground-only reset
@@ -296,7 +319,7 @@ neubii_ui/
 
 ## Roadmap
 
-Current components: `NuiButton`, `NuiInput`, `NuiTextarea`.
+Current components: `NuiButton`, `NuiInput`, `NuiTextarea`, `NuiSelect`.
 
 Likely next areas, in no fixed order:
 
