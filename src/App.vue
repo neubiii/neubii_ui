@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { NuiButton, NuiInput, NuiTextarea } from './index'
+import { NuiButton, NuiInput, NuiSelect, NuiTextarea } from './index'
 
 const email = ref('')
 const message = ref('')
+const country = ref('')
 </script>
 
 <template>
@@ -41,6 +42,22 @@ const message = ref('')
         />
 
         <p>Current value: {{ message }}</p>
+      </div>
+    </section>
+
+    <section>
+      <h2>Select</h2>
+
+      <div class="stack">
+        <label for="playground-country">Country</label>
+
+        <NuiSelect id="playground-country" v-model="country">
+          <option value="" disabled>Select a country</option>
+          <option value="de">Germany</option>
+          <option value="in">India</option>
+        </NuiSelect>
+
+        <p>Current value: {{ country }}</p>
       </div>
     </section>
 
