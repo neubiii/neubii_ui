@@ -41,8 +41,11 @@ jobs:
       - name: Lint
         run: pnpm lint:check
 
-      - name: Build
+      - name: Build library
         run: pnpm build-only
+
+      - name: Build type declarations
+        run: pnpm build:types
 
       - name: Build Storybook
         run: pnpm build-storybook
