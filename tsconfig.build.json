@@ -1,0 +1,13 @@
+// Must run after the Vite library build, which empties dist/.
+{
+  "extends": "./tsconfig.app.json",
+  "include": ["src/index.ts", "src/components/**/*.ts", "src/components/**/*.vue"],
+  "exclude": ["src/**/__tests__/*", "src/**/*.stories.ts"],
+  "compilerOptions": {
+    "noEmit": false,
+    "declaration": true,
+    "emitDeclarationOnly": true,
+    "rootDir": "./src",
+    "outDir": "./dist"
+  }
+}

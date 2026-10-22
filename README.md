@@ -138,7 +138,7 @@ __tests__/   → behavioral contract
 index.ts     → public exports
 ```
 
-`src/index.ts` is the library entry point. It re-exports components and their public types and imports the design tokens.
+`src/index.ts` defines the public API: it re-exports components and their public types. `src/library.ts` is the build entry: it imports the design tokens and re-exports `src/index.ts`, so the tokens end up in the shipped stylesheet without the emitted type declarations referencing a CSS file.
 
 ### Design tokens
 
@@ -231,6 +231,8 @@ pnpm lint:check
   ↓
 pnpm build-only
   ↓
+pnpm build:types
+  ↓
 pnpm build-storybook
 ```
 
@@ -278,8 +280,54 @@ pnpm exec vitest run
 pnpm type-check
 pnpm lint:check
 pnpm build-only
+pnpm build:types
 pnpm build-storybook
 ```
+
+## Using the package locally
+
+The package is not published yet. To use it from another Vue 3.5+ project, build and pack it:
+
+```bash
+pnpm build                      # type-check, library build, declaration files
+pnpm pack                       # neubii_ui-0.0.0.tgz
+```
+
+Then install the tarball in the other project (`pnpm add ../path/to/neubii_ui-0.0.0.tgz`). Vue is a peer dependency, so the consumer's own Vue is used.
+
+```ts
+import { NuiSelect } from 'neubii_ui'
+import type { NuiSelectSize } from 'neubii_ui'
+import 'neubii_ui/style.css'
+```
+
+`neubii_ui/style.css` contains the design tokens and all component styles. The JavaScript does not import it, so the consumer imports it once, usually in the app entry.
+
+The package ships:
+
+```text
+dist/
+├── index.js        # ES module; imports `vue` instead of bundling it
+├── style.css       # tokens + component styles
+├── index.d.ts      # public types
+└── components/**   # per-component declaration files
+```
+
+### Customizing styles
+
+Component styles are scoped, so a single consumer class does not override their colors or borders. Customize them through the semantic tokens instead, after importing `style.css`:
+
+```css
+:root {
+  --nui-color-focus-ring: #7c3aed;
+}
+
+.checkout-form {
+  --nui-color-field-border: #0f766e;
+}
+```
+
+Override semantic tokens such as `--nui-color-field-border`, not primitive tokens such as `--nui-color-gray-500`. Semantic tokens are resolved on `:root`, so a primitive override on a container has no effect. Layout properties that components don't set, such as `width` or `margin`, can be set with a normal class.
 
 ## Project structure
 
@@ -299,11 +347,14 @@ neubii_ui/
 │   │   ├── base.css        # playground-only reset
 │   │   └── tokens.css      # design tokens
 │   ├── App.vue             # playground
-│   ├── index.ts            # library entry point
-│   └── main.ts
+│   ├── index.ts            # public API (exports)
+│   ├── library.ts          # library build entry (adds the tokens)
+│   └── main.ts             # playground entry
 ├── package.json
 ├── pnpm-workspace.yaml
-├── vite.config.ts
+├── tsconfig.build.json     # declaration-file build
+├── vite.config.ts          # playground, Storybook and Vitest
+├── vite.config.lib.ts      # library build
 └── vitest.config.ts
 ```
 
@@ -325,7 +376,7 @@ Likely next areas, in no fixed order:
 
 - field composition (label, helper and error text around inputs)
 - additional form controls
-- library build and package distribution
+- publishing to npm
 - versioning and release workflow
 - visual regression testing
 - contribution documentation
