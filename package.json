@@ -2,6 +2,16 @@
   "name": "neubii_ui",
   "version": "0.0.0",
   "private": true,
+  "description": "A small Vue 3 + TypeScript component library and design system built on native HTML semantics, typed APIs and design tokens.",
+  "license": "MIT",
+  "homepage": "https://neubiii.github.io/neubii_ui/",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/neubiii/neubii_ui.git"
+  },
+  "bugs": {
+    "url": "https://github.com/neubiii/neubii_ui/issues"
+  },
   "type": "module",
   "files": [
     "dist"
