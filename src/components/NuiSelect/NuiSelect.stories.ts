@@ -154,7 +154,8 @@ export const Invalid: Story = {
       description: {
         story:
           'The error text is plain consumer markup, linked to the select with ' +
-          '`aria-describedby`. A future field component will own this composition.',
+          '`aria-describedby`. NuiField composes the label, helper and error text and this ' +
+          'wiring for you; this story shows the primitive on its own.',
       },
 
       source: {
