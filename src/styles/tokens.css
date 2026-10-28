@@ -27,6 +27,7 @@
   --nui-color-field-border: var(--nui-color-gray-500);
   --nui-color-field-border-invalid: var(--nui-color-red-600);
   --nui-color-field-placeholder: var(--nui-color-gray-600);
+  --nui-color-field-error-text: var(--nui-color-red-600);
 
   --nui-color-focus-ring: var(--nui-color-blue-600);
 

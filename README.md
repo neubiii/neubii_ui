@@ -72,7 +72,7 @@ A native text-like `<input>` primitive.
 - `invalid` state that sets `aria-invalid="true"`
 - native attribute fallthrough (`autocomplete`, `aria-describedby`, …)
 
-NuiInput deliberately stays a primitive. It does not render a label, helper text or error message. Those are composed by the consumer, as in the example above, until a dedicated field component is justified.
+NuiInput deliberately stays a primitive. It does not render a label, helper text or error message. Compose them with [NuiField](#nuifield), or by hand as in the example above.
 
 ### NuiTextarea
 
@@ -113,6 +113,31 @@ A native single-selection `<select>` primitive. Options are native `<option>` an
 - native attribute fallthrough (`form`, `autocomplete`, `aria-describedby`, …)
 
 There is no `options`, `placeholder` or `multiple` prop. Like NuiInput, it does not render a label, helper text or error message.
+
+### NuiField
+
+Composes a label, one control, optional helper text and an optional error message around `NuiInput`, `NuiTextarea` or `NuiSelect`. It renders no control itself: the default slot passes `controlProps`, which the consumer binds to the control.
+
+```vue
+<NuiField
+  label="Email"
+  helper="We only use this to send receipts."
+  :error="emailError"
+  required
+  v-slot="{ controlProps }"
+>
+  <NuiInput v-bind="controlProps" v-model="email" type="email" autocomplete="email" />
+</NuiField>
+```
+
+- `label` renders a `<label for>` linked to the control
+- `id` sets the control id; when omitted or empty, one is generated with Vue's `useId()`
+- `helper` and `error` render below the control, in that order, and can show together; both are linked through `aria-describedby`
+- a non-empty `error` marks the control invalid (`aria-invalid="true"`)
+- `required` sets native `required` on the control and adds `requiredText` (default `(required)`) to the label
+- `controlProps` contains `id`, `required`, `invalid` and `aria-describedby`; set those on NuiField, not on the control
+
+NuiField does not validate values or announce errors through a live region; the consumer decides when to set `error`. Checkboxes, radio buttons and grouped controls are not supported.
 
 ## Architecture
 
@@ -198,6 +223,7 @@ Accessibility is treated as part of each component's API and reviewed through se
 - icon-only buttons leave naming to the consumer, and the docs show how (`aria-label`)
 - slot content is never automatically hidden; stories mark decorative icons with `aria-hidden="true"`
 - Input, Textarea and Select stories pair the control with a `<label for>` and link visible error text with `aria-describedby`
+- NuiField links its label with `for`, links helper and error text with `aria-describedby`, and shows required state as visible label text
 - the loading spinner respects `prefers-reduced-motion`
 - the Storybook accessibility addon checks each story in the Storybook UI
 
@@ -212,7 +238,7 @@ Automated checks catch only a subset of issues, so they are not treated as proof
 | ESLint + oxlint | linting |
 | Storybook + a11y addon | component documentation; accessibility checks while browsing stories |
 
-Tests target public behavior: rendered semantics, attributes, emitted events and slot output. They don't target internal implementation details. NuiButton, NuiInput, NuiTextarea and NuiSelect are currently covered by 53 unit tests.
+Tests target public behavior: rendered semantics, attributes, emitted events and slot output. They don't target internal implementation details. NuiButton, NuiInput, NuiTextarea, NuiSelect and NuiField are currently covered by 67 unit tests.
 
 Storybook loads only the design tokens, not the playground's base styles. This exposes components that accidentally depend on host-application CSS.
 
@@ -340,6 +366,7 @@ neubii_ui/
 ├── src/
 │   ├── components/
 │   │   ├── NuiButton/
+│   │   ├── NuiField/
 │   │   ├── NuiInput/
 │   │   ├── NuiSelect/
 │   │   └── NuiTextarea/
@@ -370,11 +397,10 @@ neubii_ui/
 
 ## Roadmap
 
-Current components: `NuiButton`, `NuiInput`, `NuiTextarea`, `NuiSelect`.
+Current components: `NuiButton`, `NuiInput`, `NuiTextarea`, `NuiSelect`, `NuiField`.
 
 Likely next areas, in no fixed order:
 
-- field composition (label, helper and error text around inputs)
 - additional form controls
 - publishing to npm
 - versioning and release workflow

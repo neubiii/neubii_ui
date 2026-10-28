@@ -15,3 +15,6 @@ export type { NuiTextareaProps, NuiTextareaSize } from './components/NuiTextarea
 
 export { NuiSelect } from './components/NuiSelect'
 export type { NuiSelectProps, NuiSelectSize } from './components/NuiSelect'
+
+export { NuiField } from './components/NuiField'
+export type { NuiFieldControlProps, NuiFieldProps } from './components/NuiField'

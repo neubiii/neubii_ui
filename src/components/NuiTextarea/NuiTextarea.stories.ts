@@ -92,7 +92,8 @@ export const Invalid: Story = {
       description: {
         story:
           'The error text is plain consumer markup, linked to the textarea with ' +
-          '`aria-describedby`. A future field component will own this composition.',
+          '`aria-describedby`. NuiField composes the label, helper and error text and this ' +
+          'wiring for you; this story shows the primitive on its own.',
       },
       // Generated source only shows <NuiTextarea> args, which would hide the
       // label, error text and aria-describedby that this story demonstrates.
