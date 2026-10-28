@@ -97,3 +97,7 @@ Changes go through short-lived branches and pull requests, pass CI, and are squa
 ## Roadmap
 
 Likely next, in no fixed order: more form controls, npm publishing with a versioning and release workflow, visual regression testing, and contribution documentation.
+
+## License
+
+[MIT](LICENSE)
