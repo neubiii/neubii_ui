@@ -1,0 +1,28 @@
+import { Meta } from '@storybook/addon-docs/blocks'
+
+<Meta title="Introduction" />
+
+# neubii_ui
+
+A small Vue 3 + TypeScript component library and design system, built one component at a time. This Storybook is its component reference: each component page documents props, slots, states, examples and accessibility notes.
+
+> Early and under active development. Not published to npm yet; the API may still change.
+
+## Principles
+
+- **Native first.** Components render real `<button>`, `<input>`, `<textarea>` and `<select>` elements and keep their native behavior.
+- **Small, deliberate APIs.** Props describe states, slots handle composition, and other native attributes fall through.
+- **Token-driven styling.** Components use semantic `--nui-*` CSS custom properties, not raw colors.
+- **Accessibility as part of the API.** Each page states what the component handles and what stays the consumer's job.
+
+## Components
+
+- [NuiButton](?path=/docs/components-nuibutton--docs): a `<button>` with variants, sizes, a loading state and icon slots
+- [NuiField](?path=/docs/components-nuifield--docs): wires a label, helper text and error message to one field control
+- [NuiInput](?path=/docs/components-nuiinput--docs): a text-like `<input>` primitive
+- [NuiSelect](?path=/docs/components-nuiselect--docs): a single-selection `<select>` primitive
+- [NuiTextarea](?path=/docs/components-nuitextarea--docs): a multiline `<textarea>` primitive
+
+The input, textarea and select render no label of their own. For a complete form field, start with NuiField.
+
+Installation, architecture and quality checks are covered in the [README on GitHub](https://github.com/neubiii/neubii_ui#readme).

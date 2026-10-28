@@ -30,14 +30,7 @@ The input, textarea and select are primitives: they render no label or error tex
 
 ## Documentation
 
-**Storybook is the component reference**: props, slots, states, examples and accessibility notes for every component.
-
-```bash
-pnpm install
-pnpm storybook    # http://localhost:6006
-```
-
-There is no hosted Storybook yet.
+**[Storybook](https://neubiii.github.io/neubii_ui/) is the component reference**: props, slots, states, examples and accessibility notes for every component. It is deployed from `main` after CI passes.
 
 ## Usage
 
@@ -82,7 +75,7 @@ Customize appearance by overriding **semantic** tokens after importing `style.cs
 - **Tests:** Vitest + Vue Test Utils, aimed at public behavior (rendered semantics, attributes, events, `v-model`, slots) rather than internals.
 - **Static checks:** `vue-tsc` type-checking, ESLint and oxlint.
 - **Accessibility:** the Storybook a11y addon checks stories while browsing. Automated checks catch only part of the issues, so they are not treated as proof of conformance.
-- **CI** (GitHub Actions, on pull requests and pushes to `main`): unit tests → type-check → lint → library build → declaration build → Storybook build. The workflow has read-only repository permissions, and only `esbuild`'s install script is allowed to run.
+- **CI** (GitHub Actions, on pull requests and pushes to `main`): unit tests → type-check → lint → library build → declaration build → Storybook build. On `main`, a separate job then deploys that same Storybook build to GitHub Pages. Only the deploy job can write to Pages; the rest of the workflow has read-only repository permissions, and only `esbuild`'s install script is allowed to run.
 
 ## Development
 
