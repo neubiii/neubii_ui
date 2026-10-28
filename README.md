@@ -2,407 +2,105 @@
 
 [![CI](https://github.com/neubiii/neubii_ui/actions/workflows/ci.yml/badge.svg)](https://github.com/neubiii/neubii_ui/actions/workflows/ci.yml)
 
-A growing Vue 3 + TypeScript component and design system, built one component at a time.
+A small Vue 3 + TypeScript component library and design system, built one component at a time.
 
-The goal is not a large component catalog. Each component is treated as a small public contract: a typed API, native HTML semantics, accessibility decisions, design tokens, Storybook documentation and behavioral tests, all checked in CI.
+The goal is not a large catalog. Each component is treated as a public contract: a typed API, native HTML semantics, deliberate accessibility decisions, design tokens, Storybook documentation and behavioral tests, all checked in CI.
 
-What makes it interesting to read:
+> **Status:** early and under active development. Not published to npm yet; the API may still change.
 
-- **Native first.** Components render real `<button>`, `<input>`, `<textarea>` and `<select>` elements and rely on native disabled, readonly and required behavior instead of recreating it.
-- **Small, deliberate APIs.** Props describe component states. Composition happens through slots. Everything else falls through as native attributes.
-- **Token-driven styling.** Components consume semantic CSS custom properties, not raw colors.
-- **Documented trade-offs.** Stories and docs explain what the component handles and what stays the consumer's responsibility, such as naming an icon-only button.
+## Principles
 
-> **Status:** under active development. Not yet published to npm, and the API may still change.
+- **Native first.** Components render real `<button>`, `<input>`, `<textarea>` and `<select>` elements and keep native disabled, required, keyboard and form behavior instead of recreating it.
+- **Small, deliberate APIs.** Props describe component states, slots handle composition, and other native attributes fall through. Variants and sizes are typed unions.
+- **Token-driven styling.** Components use semantic CSS custom properties, not raw colors, and don't depend on host-application CSS.
+- **Accessibility as part of the API.** Stories document what each component handles and what stays the consumer's job, such as naming an icon-only button.
+- **Abstractions only when needed.** Shared tokens or helpers are added when a second component needs the same decision.
 
 ## Components
 
-### NuiButton
+| Component | Renders | Summary |
+| --- | --- | --- |
+| `NuiButton` | `<button>` | Variants, sizes, loading state, `start`/`end` slots for icons, icon-only sizing |
+| `NuiInput` | `<input>` | Text-like input primitive with `v-model`, sizes and an invalid state |
+| `NuiTextarea` | `<textarea>` | Multiline primitive; height comes from native `rows` |
+| `NuiSelect` | `<select>` | Single selection with native `<option>` and `<optgroup>` children |
+| `NuiField` | label, helper, error | Wires a label, helper text, error message and required state to one input, textarea or select |
 
-A native `<button>` with variants, sizes, a loading state and slot-based composition.
+The input, textarea and select are primitives: they render no label or error text. Use `NuiField`, or your own `<label for>`.
 
-```vue
-<NuiButton :loading="isSaving">
-  <template #start>
-    <SaveIcon aria-hidden="true" />
-  </template>
+## Documentation
 
-  Save changes
-</NuiButton>
+**Storybook is the component reference**: props, slots, states, examples and accessibility notes for every component.
+
+```bash
+pnpm install
+pnpm storybook    # http://localhost:6006
+```
+
+There is no hosted Storybook yet.
+
+## Usage
+
+The package is not published. To try it from another Vue 3.5+ project, build and pack it:
+
+```bash
+pnpm build    # type-check, library build, declaration files
+pnpm pack     # neubii_ui-0.0.0.tgz
+```
+
+Install the tarball in the other project (`pnpm add ../path/to/neubii_ui-0.0.0.tgz`). Vue is a peer dependency.
+
+```ts
+import { NuiField, NuiInput } from 'neubii_ui'
+import 'neubii_ui/style.css' // tokens + component styles, imported once
 ```
 
 ```vue
-<NuiButton icon-only variant="ghost" aria-label="Close">
-  <CloseIcon aria-hidden="true" />
-</NuiButton>
-```
-
-- `primary`, `secondary` and `ghost` variants; `sm`, `md` and `lg` sizes
-- typed native `type`: `button` (default), `submit`, `reset`
-- native `disabled`
-- `loading`: natively disables the button, sets `aria-busy="true"` and shows a CSS spinner
-- stable loading layout: the label stays rendered underneath the spinner, so the button keeps its width and accessible name
-- spinner rotation is turned off under `prefers-reduced-motion: reduce`
-- `start`, `default` and `end` slots that accept any Vue content
-- `iconOnly`: compact, square-by-default sizing for icon-only buttons; the consumer provides the accessible name (`aria-label` or `aria-labelledby`)
-- native attribute fallthrough and a typed `click` event
-
-There is no icon library and no `icon` prop. Icons are ordinary slot content.
-
-### NuiInput
-
-A native text-like `<input>` primitive.
-
-```vue
-<label for="email">Email</label>
-<NuiInput
-  id="email"
-  v-model="email"
-  type="email"
-  invalid
-  aria-describedby="email-error"
-/>
-<p id="email-error">Enter a complete email address.</p>
-```
-
-- `v-model` with a `string` value
-- `text`, `email`, `password`, `search`, `tel` and `url` types
-- `sm`, `md` and `lg` sizes
-- native `disabled`, `readonly` and `required`
-- `invalid` state that sets `aria-invalid="true"`
-- native attribute fallthrough (`autocomplete`, `aria-describedby`, …)
-
-NuiInput deliberately stays a primitive. It does not render a label, helper text or error message. Compose them with [NuiField](#nuifield), or by hand as in the example above.
-
-### NuiTextarea
-
-A native `<textarea>` primitive for multiline text.
-
-```vue
-<label for="message">Message</label>
-<NuiTextarea id="message" v-model="message" rows="4" maxlength="500" />
-```
-
-- `v-model` with a `string` value
-- `sm`, `md` and `lg` sizes (padding only; height comes from native `rows`)
-- native `disabled`, `readonly` and `required`
-- `invalid` state that sets `aria-invalid="true"`
-- native resizing is left in place
-- native attribute fallthrough (`rows`, `maxlength`, `aria-describedby`, …)
-
-Like NuiInput, it does not render a label, helper text or error message.
-
-### NuiSelect
-
-A native single-selection `<select>` primitive. Options are native `<option>` and `<optgroup>` elements in the default slot.
-
-```vue
-<label for="country">Country</label>
-<NuiSelect id="country" v-model="country">
-  <option value="" disabled>Select a country</option>
-  <option value="de">Germany</option>
-  <option value="in">India</option>
-</NuiSelect>
-```
-
-- required `v-model` with a `string` value: initialize it to an option's value, or to `''` with an empty-value prompt option as above
-- `sm`, `md` and `lg` sizes
-- native `disabled` and `required`
-- `invalid` state that sets `aria-invalid="true"`
-- native appearance, dropdown arrow and keyboard behavior are left in place
-- native attribute fallthrough (`form`, `autocomplete`, `aria-describedby`, …)
-
-There is no `options`, `placeholder` or `multiple` prop. Like NuiInput, it does not render a label, helper text or error message.
-
-### NuiField
-
-Composes a label, one control, optional helper text and an optional error message around `NuiInput`, `NuiTextarea` or `NuiSelect`. It renders no control itself: the default slot passes `controlProps`, which the consumer binds to the control.
-
-```vue
-<NuiField
-  label="Email"
-  helper="We only use this to send receipts."
-  :error="emailError"
-  required
-  v-slot="{ controlProps }"
->
+<NuiField label="Email" :error="emailError" required v-slot="{ controlProps }">
   <NuiInput v-bind="controlProps" v-model="email" type="email" autocomplete="email" />
 </NuiField>
 ```
 
-- `label` renders a `<label for>` linked to the control
-- `id` sets the control id; when omitted or empty, one is generated with Vue's `useId()`
-- `helper` and `error` render below the control, in that order, and can show together; both are linked through `aria-describedby`
-- a non-empty `error` marks the control invalid (`aria-invalid="true"`)
-- `required` sets native `required` on the control and adds `requiredText` (default `(required)`) to the label
-- `controlProps` contains `id`, `required`, `invalid` and `aria-describedby`; set those on NuiField, not on the control
+Customize appearance by overriding **semantic** tokens after importing `style.css`. Component styles are scoped, so a single consumer class won't override their colors, and primitive tokens such as `--nui-color-gray-500` have no effect when overridden on a container.
 
-NuiField does not validate values or announce errors through a live region; the consumer decides when to set `error`. Checkboxes, radio buttons and grouped controls are not supported.
+```css
+.checkout-form {
+  --nui-color-field-border: #0f766e;
+  --nui-color-focus-ring: #7c3aed;
+}
+```
 
 ## Architecture
 
-### Component structure
+- **Colocated components.** Each folder in `src/components/` holds the `.vue` implementation, public `.types.ts`, stories, `__tests__/` and a local `index.ts`.
+- **Explicit public API.** `src/index.ts` only re-exports components and their public types. `src/library.ts` is the build entry: it adds the token CSS, so the tokens ship in `dist/style.css` without the type declarations referencing CSS.
+- **Two token layers** in `src/styles/tokens.css`: primitives (`--nui-color-red-600`) feed semantic roles (`--nui-color-field-border-invalid`), and components use only the semantic roles. Controls share size, typography and focus-ring tokens, so a button and an input of the same size line up.
+- **Package output.** An ES module that imports Vue instead of bundling it, one stylesheet and `.d.ts` files. Storybook, tests and the playground (`src/App.vue`) are not shipped.
 
-Each component keeps everything needed to understand it in one folder:
+## Quality
 
-```text
-src/components/NuiButton/
-├── __tests__/
-│   └── NuiButton.test.ts
-├── NuiButton.vue
-├── NuiButton.types.ts
-├── NuiButton.stories.ts
-└── index.ts
-```
+- **Tests:** Vitest + Vue Test Utils, aimed at public behavior (rendered semantics, attributes, events, `v-model`, slots) rather than internals.
+- **Static checks:** `vue-tsc` type-checking, ESLint and oxlint.
+- **Accessibility:** the Storybook a11y addon checks stories while browsing. Automated checks catch only part of the issues, so they are not treated as proof of conformance.
+- **CI** (GitHub Actions, on pull requests and pushes to `main`): unit tests → type-check → lint → library build → declaration build → Storybook build. The workflow has read-only repository permissions, and only `esbuild`'s install script is allowed to run.
 
-```text
-.vue         → implementation
-.types.ts    → public TypeScript contract
-.stories.ts  → interactive documentation
-__tests__/   → behavioral contract
-index.ts     → public exports
-```
-
-`src/index.ts` defines the public API: it re-exports components and their public types. `src/library.ts` is the build entry: it imports the design tokens and re-exports `src/index.ts`, so the tokens end up in the shipped stylesheet without the emitted type declarations referencing a CSS file.
-
-### Design tokens
-
-Styling decisions live in CSS custom properties in `src/styles/tokens.css`, in two layers:
-
-```text
-primitive token          semantic token                   component
---nui-color-gray-800  →  --nui-color-action-primary-bg  →  NuiButton
---nui-color-red-600   →  --nui-color-field-border-invalid →  NuiInput
-```
-
-Components only reference semantic roles, so a theme can change what "primary action" or "invalid field" means without editing component CSS.
-
-Controls also share a small sizing and typography contract, so a button and an input of the same size line up:
-
-- `--nui-control-min-height-{sm,md,lg}` and matching block and inline padding (NuiTextarea uses the padding but not the single-line minimum heights)
-- `--nui-control-font-size` and `--nui-control-line-height`
-- `--nui-focus-ring-width`, `--nui-focus-ring-offset` and `--nui-color-focus-ring` for the visible focus outline
-- `--nui-opacity-disabled`
-
-New tokens are added only when more than one component needs the same decision.
-
-### Composition over configuration
-
-- Props describe meaningful component states.
-- Slots handle composition.
-- Native attributes stay available through Vue attribute fallthrough.
-- CSS custom properties carry design-system decisions.
-
-Button icons are a concrete example. This project avoids:
-
-```vue
-<NuiButton icon="save.svg" />
-```
-
-and prefers:
-
-```vue
-<NuiButton>
-  <template #start>
-    <SaveIcon />
-  </template>
-
-  Save
-</NuiButton>
-```
-
-The library stays independent of any icon set, and the consumer keeps control over the icon's markup and accessibility attributes.
-
-## Accessibility
-
-Accessibility is treated as part of each component's API and reviewed through semantics, stories and automated checks. In practice:
-
-- native `<button>`, `<input>`, `<textarea>` and `<select>` elements, with native disabled, readonly and required semantics
-- a visible `:focus-visible` outline driven by shared focus tokens
-- `aria-busy` on loading buttons; `aria-invalid` on invalid inputs, textareas and selects
-- icon-only buttons leave naming to the consumer, and the docs show how (`aria-label`)
-- slot content is never automatically hidden; stories mark decorative icons with `aria-hidden="true"`
-- Input, Textarea and Select stories pair the control with a `<label for>` and link visible error text with `aria-describedby`
-- NuiField links its label with `for`, links helper and error text with `aria-describedby`, and shows required state as visible label text
-- the loading spinner respects `prefers-reduced-motion`
-- the Storybook accessibility addon checks each story in the Storybook UI
-
-Automated checks catch only a subset of issues, so they are not treated as proof of conformance.
-
-## Testing and quality
-
-| Tool | Purpose |
-| --- | --- |
-| Vitest + Vue Test Utils | behavioral unit tests |
-| TypeScript / `vue-tsc` | type-checking, including `.vue` files |
-| ESLint + oxlint | linting |
-| Storybook + a11y addon | component documentation; accessibility checks while browsing stories |
-
-Tests target public behavior: rendered semantics, attributes, emitted events and slot output. They don't target internal implementation details. NuiButton, NuiInput, NuiTextarea, NuiSelect and NuiField are currently covered by 67 unit tests.
-
-Storybook loads only the design tokens, not the playground's base styles. This exposes components that accidentally depend on host-application CSS.
-
-### CI
-
-GitHub Actions (`.github/workflows/ci.yml`) runs on pull requests to `main` and on pushes to `main`:
-
-```text
-pnpm install --frozen-lockfile
-  ↓
-pnpm exec vitest run
-  ↓
-pnpm type-check
-  ↓
-pnpm lint:check
-  ↓
-pnpm build-only
-  ↓
-pnpm build:types
-  ↓
-pnpm build-storybook
-```
-
-The workflow has read-only repository permissions. Dependency install scripts are not allowed globally: `pnpm-workspace.yaml` explicitly approves only `esbuild`'s build script.
-
-The Storybook accessibility addon is not part of CI; CI verifies that Storybook builds.
-
-## Engineering workflow
-
-```text
-main
- ↓
-short-lived feature / refactor branch
- ↓
-implementation
- ↓
-local quality gates
- ↓
-pull request
- ↓
-GitHub Actions
- ↓
-squash merge
- ↓
-branch cleanup
-```
-
-## Getting started
+## Development
 
 Requires Node.js `^22.18.0 || >=24.12.0` and pnpm.
 
 ```bash
-git clone https://github.com/neubiii/neubii_ui.git
-cd neubii_ui
-pnpm install
+pnpm dev               # playground
+pnpm storybook         # component workbench
 
-pnpm dev          # local playground (src/App.vue)
-pnpm storybook    # component workbench on port 6006
-```
-
-Quality gates (the same checks CI runs):
-
-```bash
-pnpm exec vitest run
+pnpm exec vitest run   # the checks CI runs
 pnpm type-check
-pnpm lint:check
-pnpm build-only
-pnpm build:types
+pnpm lint:check        # `pnpm lint` and `pnpm format` rewrite files
+pnpm build
 pnpm build-storybook
 ```
 
-## Using the package locally
-
-The package is not published yet. To use it from another Vue 3.5+ project, build and pack it:
-
-```bash
-pnpm build                      # type-check, library build, declaration files
-pnpm pack                       # neubii_ui-0.0.0.tgz
-```
-
-Then install the tarball in the other project (`pnpm add ../path/to/neubii_ui-0.0.0.tgz`). Vue is a peer dependency, so the consumer's own Vue is used.
-
-```ts
-import { NuiSelect } from 'neubii_ui'
-import type { NuiSelectSize } from 'neubii_ui'
-import 'neubii_ui/style.css'
-```
-
-`neubii_ui/style.css` contains the design tokens and all component styles. The JavaScript does not import it, so the consumer imports it once, usually in the app entry.
-
-The package ships:
-
-```text
-dist/
-├── index.js        # ES module; imports `vue` instead of bundling it
-├── style.css       # tokens + component styles
-├── index.d.ts      # public types
-└── components/**   # per-component declaration files
-```
-
-### Customizing styles
-
-Component styles are scoped, so a single consumer class does not override their colors or borders. Customize them through the semantic tokens instead, after importing `style.css`:
-
-```css
-:root {
-  --nui-color-focus-ring: #7c3aed;
-}
-
-.checkout-form {
-  --nui-color-field-border: #0f766e;
-}
-```
-
-Override semantic tokens such as `--nui-color-field-border`, not primitive tokens such as `--nui-color-gray-500`. Semantic tokens are resolved on `:root`, so a primitive override on a container has no effect. Layout properties that components don't set, such as `width` or `margin`, can be set with a normal class.
-
-## Project structure
-
-```text
-neubii_ui/
-├── .github/workflows/ci.yml
-├── .storybook/
-│   ├── main.ts
-│   └── preview.ts
-├── src/
-│   ├── components/
-│   │   ├── NuiButton/
-│   │   ├── NuiField/
-│   │   ├── NuiInput/
-│   │   ├── NuiSelect/
-│   │   └── NuiTextarea/
-│   ├── styles/
-│   │   ├── base.css        # playground-only reset
-│   │   └── tokens.css      # design tokens
-│   ├── App.vue             # playground
-│   ├── index.ts            # public API (exports)
-│   ├── library.ts          # library build entry (adds the tokens)
-│   └── main.ts             # playground entry
-├── package.json
-├── pnpm-workspace.yaml
-├── tsconfig.build.json     # declaration-file build
-├── vite.config.ts          # playground, Storybook and Vitest
-├── vite.config.lib.ts      # library build
-└── vitest.config.ts
-```
-
-## Engineering principles
-
-- **Prefer native semantics.** Use the platform before recreating behavior with JavaScript or ARIA.
-- **Keep public APIs intentional.** A prop must represent a real component state, not a CSS property.
-- **Compose, don't couple.** Slots instead of icon props; native attributes instead of wrapper props.
-- **Test behavior, not implementation.** Internal refactors shouldn't break tests.
-- **Add abstractions when requirements justify them.** For example, a spacing value shared by a single component stays local until a second component needs it.
-- **Stay independent of the host app.** Components must not rely on application resets or global styles.
-- **Let TypeScript make supported states discoverable.** Variants, sizes and types are typed unions, not free strings.
+Changes go through short-lived branches and pull requests, pass CI, and are squash-merged.
 
 ## Roadmap
 
-Current components: `NuiButton`, `NuiInput`, `NuiTextarea`, `NuiSelect`, `NuiField`.
-
-Likely next areas, in no fixed order:
-
-- additional form controls
-- publishing to npm
-- versioning and release workflow
-- visual regression testing
-- contribution documentation
+Likely next, in no fixed order: more form controls, npm publishing with a versioning and release workflow, visual regression testing, and contribution documentation.

@@ -20,7 +20,8 @@ const meta = {
       description: {
         component:
           'A native `<button>` primitive. Native attributes such as `aria-label`, `name` or ' +
-          '`form` fall through to the `<button>`.\n\n' +
+          '`form` fall through to the `<button>`. `type` defaults to `button`, not the native ' +
+          '`submit`, so a button inside a form submits it only with `type="submit"`.\n\n' +
           '**Slots.** `default` is the label. `start` and `end` hold content placed before ' +
           'and after it, usually an icon. Slots accept any Vue content: NuiButton does not ' +
           'depend on an icon library and has no icon prop.\n\n' +
@@ -37,7 +38,8 @@ const meta = {
           'natively disabled and the loading presentation is shown.\n\n' +
           'The original content stays rendered but transparent, so the button keeps its ' +
           'width. That content remains in the accessibility tree, preserving the ' +
-          "button's accessible name. No live region is added.",
+          "button's accessible name. No live region is added. The spinner does not rotate " +
+          'under `prefers-reduced-motion: reduce`.',
       },
     },
   },
