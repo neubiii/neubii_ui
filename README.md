@@ -18,13 +18,13 @@ The goal is not a large catalog. Each component is treated as a public contract:
 
 ## Components
 
-| Component | Renders | Summary |
-| --- | --- | --- |
-| `NuiButton` | `<button>` | Variants, sizes, loading state, `start`/`end` slots for icons, icon-only sizing |
-| `NuiInput` | `<input>` | Text-like input primitive with `v-model`, sizes and an invalid state |
-| `NuiTextarea` | `<textarea>` | Multiline primitive; height comes from native `rows` |
-| `NuiSelect` | `<select>` | Single selection with native `<option>` and `<optgroup>` children |
-| `NuiField` | label, helper, error | Wires a label, helper text, error message and required state to one input, textarea or select |
+| Component     | Renders              | Summary                                                                                       |
+| ------------- | -------------------- | --------------------------------------------------------------------------------------------- |
+| `NuiButton`   | `<button>`           | Variants, sizes, loading state, `start`/`end` slots for icons, icon-only sizing               |
+| `NuiInput`    | `<input>`            | Text-like input primitive with `v-model`, sizes and an invalid state                          |
+| `NuiTextarea` | `<textarea>`         | Multiline primitive; height comes from native `rows`                                          |
+| `NuiSelect`   | `<select>`           | Single selection with native `<option>` and `<optgroup>` children                             |
+| `NuiField`    | label, helper, error | Wires a label, helper text, error message and required state to one input, textarea or select |
 
 The input, textarea and select are primitives: they render no label or error text. Use `NuiField`, or your own `<label for>`.
 
@@ -75,7 +75,7 @@ Customize appearance by overriding **semantic** tokens after importing `style.cs
 - **Tests:** Vitest + Vue Test Utils, aimed at public behavior (rendered semantics, attributes, events, `v-model`, slots) rather than internals.
 - **Static checks:** `vue-tsc` type-checking, ESLint and oxlint.
 - **Accessibility:** the Storybook a11y addon checks stories while browsing. Automated checks catch only part of the issues, so they are not treated as proof of conformance.
-- **CI** (GitHub Actions, on pull requests and pushes to `main`): unit tests → type-check → lint → library build → declaration build → Storybook build. On `main`, a separate job then deploys that same Storybook build to GitHub Pages. Only the deploy job can write to Pages; the rest of the workflow has read-only repository permissions, and only `esbuild`'s install script is allowed to run.
+- **CI** (GitHub Actions, on pull requests and pushes to `main`): unit tests → type-check → lint → format check → library build → declaration build → Storybook build. On `main`, a separate job then deploys that same Storybook build to GitHub Pages. Only the deploy job can write to Pages; the rest of the workflow has read-only repository permissions, and only `esbuild`'s install script is allowed to run.
 
 ## Development
 
@@ -88,6 +88,7 @@ pnpm storybook         # component workbench
 pnpm exec vitest run   # the checks CI runs
 pnpm type-check
 pnpm lint:check        # `pnpm lint` and `pnpm format` rewrite files
+pnpm format:check
 pnpm build
 pnpm build-storybook
 ```

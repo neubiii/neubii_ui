@@ -16,10 +16,7 @@ const props = withDefaults(defineProps<NuiInputProps>(), {
     :name="props.name"
     :type="props.type"
     class="nui-input"
-    :class="[
-      `nui-input--${props.size}`,
-      { 'nui-input--invalid': props.invalid },
-    ]"
+    :class="[`nui-input--${props.size}`, { 'nui-input--invalid': props.invalid }]"
     :placeholder="props.placeholder"
     :disabled="props.disabled"
     :readonly="props.readonly"
@@ -45,23 +42,17 @@ const props = withDefaults(defineProps<NuiInputProps>(), {
 
 .nui-input--sm {
   min-height: var(--nui-control-min-height-sm);
-  padding:
-    var(--nui-control-padding-block-sm)
-    var(--nui-control-padding-inline-sm);
+  padding: var(--nui-control-padding-block-sm) var(--nui-control-padding-inline-sm);
 }
 
 .nui-input--md {
   min-height: var(--nui-control-min-height-md);
-  padding:
-    var(--nui-control-padding-block-md)
-    var(--nui-control-padding-inline-md);
+  padding: var(--nui-control-padding-block-md) var(--nui-control-padding-inline-md);
 }
 
 .nui-input--lg {
   min-height: var(--nui-control-min-height-lg);
-  padding:
-    var(--nui-control-padding-block-lg)
-    var(--nui-control-padding-inline-lg);
+  padding: var(--nui-control-padding-block-lg) var(--nui-control-padding-inline-lg);
 }
 
 .nui-input::placeholder {
@@ -74,10 +65,7 @@ const props = withDefaults(defineProps<NuiInputProps>(), {
 }
 
 .nui-input:focus-visible {
-  outline:
-    var(--nui-focus-ring-width)
-    solid
-    var(--nui-color-focus-ring);
+  outline: var(--nui-focus-ring-width) solid var(--nui-color-focus-ring);
   outline-offset: var(--nui-focus-ring-offset);
 }
 

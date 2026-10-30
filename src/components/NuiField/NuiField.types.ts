@@ -16,7 +16,11 @@ export interface NuiFieldProps {
   requiredText?: string
 }
 
-/** Bindings for the slotted control: `v-bind="controlProps"`. */
+/**
+ * Bindings for the slotted control: `v-bind="controlProps"`. Don't also set `id` or
+ * `aria-describedby` on the control; a later binding replaces this wiring. Pass the id to
+ * NuiField instead.
+ */
 export interface NuiFieldControlProps {
   id: string
   required: boolean
