@@ -32,6 +32,10 @@ defineSlots<{
  The native appearance, including the dropdown arrow and the option list, is
  intentionally kept. Browsers differ in how much of the closed select's box
  (padding, height) they let CSS change.
+
+ Block padding is 0: browsers size the closed select's text box themselves and
+ ignore line-height, so padding made it taller than the other controls. The
+ shared min-height sets the height instead, and the browser centers the text.
  */
 .nui-select {
   box-sizing: border-box;
@@ -49,17 +53,17 @@ defineSlots<{
 
 .nui-select--sm {
   min-height: var(--nui-control-min-height-sm);
-  padding: var(--nui-control-padding-block-sm) var(--nui-control-padding-inline-sm);
+  padding: 0 var(--nui-control-padding-inline-sm);
 }
 
 .nui-select--md {
   min-height: var(--nui-control-min-height-md);
-  padding: var(--nui-control-padding-block-md) var(--nui-control-padding-inline-md);
+  padding: 0 var(--nui-control-padding-inline-md);
 }
 
 .nui-select--lg {
   min-height: var(--nui-control-min-height-lg);
-  padding: var(--nui-control-padding-block-lg) var(--nui-control-padding-inline-lg);
+  padding: 0 var(--nui-control-padding-inline-lg);
 }
 
 .nui-select--invalid {

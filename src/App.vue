@@ -35,11 +35,7 @@ const country = ref('')
       <div class="stack">
         <label for="playground-message">Message</label>
 
-        <NuiTextarea
-          id="playground-message"
-          v-model="message"
-          rows="4"
-        />
+        <NuiTextarea id="playground-message" v-model="message" rows="4" />
 
         <p>Current value: {{ message }}</p>
       </div>
@@ -65,21 +61,13 @@ const country = ref('')
       <h2>Button</h2>
 
       <div class="row">
-        <NuiButton>
-          Primary
-        </NuiButton>
+        <NuiButton>Primary</NuiButton>
 
-        <NuiButton variant="secondary">
-          Secondary
-        </NuiButton>
+        <NuiButton variant="secondary">Secondary</NuiButton>
 
-        <NuiButton variant="ghost">
-          Ghost
-        </NuiButton>
+        <NuiButton variant="ghost">Ghost</NuiButton>
 
-        <NuiButton disabled>
-          Disabled
-        </NuiButton>
+        <NuiButton disabled>Disabled</NuiButton>
       </div>
     </section>
   </main>
