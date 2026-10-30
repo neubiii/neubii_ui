@@ -132,6 +132,36 @@ function onClick(event: MouseEvent) {
   color: var(--nui-color-action-ghost-text);
 }
 
+/*
+ Disabled and loading buttons give no pointer feedback.
+ (hover: hover) avoids a stuck hover state after a tap on touch screens.
+ */
+@media (hover: hover) {
+  .nui-button--primary:hover:not(:disabled, .nui-button--loading) {
+    background: var(--nui-color-action-primary-bg-hover);
+  }
+
+  .nui-button--secondary:hover:not(:disabled, .nui-button--loading) {
+    background: var(--nui-color-action-secondary-bg-hover);
+  }
+
+  .nui-button--ghost:hover:not(:disabled, .nui-button--loading) {
+    background: var(--nui-color-action-ghost-bg-hover);
+  }
+}
+
+.nui-button--primary:active:not(:disabled, .nui-button--loading) {
+  background: var(--nui-color-action-primary-bg-active);
+}
+
+.nui-button--secondary:active:not(:disabled, .nui-button--loading) {
+  background: var(--nui-color-action-secondary-bg-active);
+}
+
+.nui-button--ghost:active:not(:disabled, .nui-button--loading) {
+  background: var(--nui-color-action-ghost-bg-active);
+}
+
 .nui-button:focus-visible {
   outline:
     var(--nui-focus-ring-width)

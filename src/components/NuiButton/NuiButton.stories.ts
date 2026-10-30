@@ -43,7 +43,12 @@ const meta = {
           'The original content stays rendered but transparent, so the button keeps its ' +
           'width. That content remains in the accessibility tree, preserving the ' +
           "button's accessible name. No live region is added. The spinner does not rotate " +
-          'under `prefers-reduced-motion: reduce`.',
+          'under `prefers-reduced-motion: reduce`.\n\n' +
+          '**States.** Each variant changes its background on hover and while pressed, ' +
+          'using the `--nui-color-action-{variant}-bg-hover` and `-bg-active` tokens. Ghost ' +
+          'uses a translucent tint that blends with the surface underneath. Disabled and ' +
+          'loading buttons show no hover or pressed feedback. Keyboard focus is shown only by ' +
+          'the focus ring.',
       },
     },
   },
