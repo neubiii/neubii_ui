@@ -16,6 +16,17 @@ const slots = defineSlots<{
   default?: () => unknown
   end?: () => unknown
 }>()
+
+// Loading uses aria-disabled instead of native disabled so the button keeps focus.
+// Canceling the click also cancels the native action, including form submission.
+function onClick(event: MouseEvent) {
+  if (props.loading) {
+    event.preventDefault()
+    return
+  }
+
+  emit('click', event)
+}
 </script>
 
 <template>
@@ -30,9 +41,10 @@ const slots = defineSlots<{
         'nui-button--loading': props.loading,
       },
     ]"
-    :disabled="props.disabled || props.loading"
+    :disabled="props.disabled"
+    :aria-disabled="(props.loading && !props.disabled) || undefined"
     :aria-busy="props.loading || undefined"
-    @click="emit('click', $event)"
+    @click="onClick"
   >
     <span class="nui-button__content">
       <span v-if="slots.start" class="nui-button__start">

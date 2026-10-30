@@ -1,5 +1,6 @@
 import { mount } from '@vue/test-utils'
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
+import { h } from 'vue'
 
 import NuiButton from '../NuiButton.vue'
 
@@ -151,6 +152,7 @@ describe('NuiButton', () => {
       const wrapper = mount(NuiButton)
 
       expect(wrapper.attributes('aria-busy')).toBeUndefined()
+      expect(wrapper.attributes('aria-disabled')).toBeUndefined()
       expect(wrapper.find('.nui-button__spinner').exists()).toBe(false)
     })
 
@@ -165,17 +167,56 @@ describe('NuiButton', () => {
       expect(wrapper.classes()).toContain('nui-button--loading')
     })
 
-    it('natively disables the button and does not emit click', async () => {
+    // Native disabled would drop focus in browsers; jsdom doesn't model that, so the
+    // focus behavior itself is verified manually.
+    it('exposes aria-disabled instead of native disabled', () => {
       const wrapper = mount(NuiButton, {
         props: {
           loading: true,
         },
       })
 
-      await wrapper.trigger('click')
+      expect((wrapper.element as HTMLButtonElement).disabled).toBe(false)
+      expect(wrapper.attributes('aria-disabled')).toBe('true')
+    })
 
-      expect((wrapper.element as HTMLButtonElement).disabled).toBe(true)
+    it('cancels the click and does not emit it', () => {
+      const wrapper = mount(NuiButton, {
+        props: {
+          loading: true,
+        },
+      })
+      const event = new MouseEvent('click', { bubbles: true, cancelable: true })
+
+      wrapper.element.dispatchEvent(event)
+
+      expect(event.defaultPrevented).toBe(true)
       expect(wrapper.emitted('click')).toBeUndefined()
+    })
+
+    it('does not submit its form while loading', async () => {
+      const onSubmit = vi.fn<(event: Event) => void>((event) => event.preventDefault())
+      // Only a form connected to the document submits.
+      const mountInForm = (loading: boolean) =>
+        mount(
+          {
+            render: () =>
+              h('form', { onSubmit }, [h(NuiButton, { type: 'submit', loading }, () => 'Save')]),
+          },
+          { attachTo: document.body },
+        )
+
+      const loadingForm = mountInForm(true)
+      await loadingForm.get('button').trigger('click')
+      loadingForm.unmount()
+
+      expect(onSubmit).not.toHaveBeenCalled()
+
+      const idleForm = mountInForm(false)
+      await idleForm.get('button').trigger('click')
+      idleForm.unmount()
+
+      expect(onSubmit).toHaveBeenCalledOnce()
     })
 
     it('renders a decorative loading indicator', () => {
@@ -221,6 +262,7 @@ describe('NuiButton', () => {
 
       expect((wrapper.element as HTMLButtonElement).disabled).toBe(false)
       expect(wrapper.attributes('aria-busy')).toBeUndefined()
+      expect(wrapper.attributes('aria-disabled')).toBeUndefined()
       expect(wrapper.emitted('click')).toHaveLength(1)
     })
   })
@@ -240,6 +282,11 @@ describe('NuiButton', () => {
     expect(wrapper.emitted('click')).toBeUndefined()
 
     await wrapper.setProps({ loading: true })
+
+    expect((wrapper.element as HTMLButtonElement).disabled).toBe(true)
+    expect(wrapper.attributes('aria-disabled')).toBeUndefined()
+    expect(wrapper.attributes('aria-busy')).toBe('true')
+
     await wrapper.setProps({ loading: false })
 
     expect((wrapper.element as HTMLButtonElement).disabled).toBe(true)

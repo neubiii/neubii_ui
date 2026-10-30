@@ -32,10 +32,14 @@ const meta = {
           '**Icon-only.** `iconOnly` only changes the sizing: padding is removed and the ' +
           'minimum width matches the minimum height. It does not create an accessible ' +
           'name: the consumer must provide one with `aria-label` or `aria-labelledby`.\n\n' +
-          '**Loading.** `loading` temporarily disables the button: it is natively disabled ' +
-          '(so it cannot be activated and does not emit `click`), sets `aria-busy="true"` ' +
-          'and shows a decorative spinner. If `disabled` is also true, the button stays ' +
-          'natively disabled and the loading presentation is shown.\n\n' +
+          '**Loading.** `loading` makes the button temporarily non-operable without removing ' +
+          'it from focus: it sets `aria-disabled="true"` and `aria-busy="true"` instead of ' +
+          'native `disabled`, so a keyboard user who starts an action keeps focus on the ' +
+          'button. Activation is canceled while loading: no `click` is emitted and a ' +
+          '`type="submit"` button does not submit its form. Ancestors still receive the ' +
+          'native click event. Use `disabled` for a button that is genuinely unavailable; if ' +
+          'both are true, the button is natively disabled and shows the loading ' +
+          'presentation.\n\n' +
           'The original content stays rendered but transparent, so the button keeps its ' +
           'width. That content remains in the accessibility tree, preserving the ' +
           "button's accessible name. No live region is added. The spinner does not rotate " +
@@ -239,8 +243,9 @@ export const Loading: Story = {
         story:
           'Toggle `loading` in Controls: the width stays the same because the label is ' +
           'still rendered underneath the spinner. The original content remains in the ' +
-          "accessibility tree, preserving the button's accessible name. The button exposes " +
-          '`aria-busy` and native disabled semantics. The spinner is `aria-hidden`.',
+          "accessibility tree, preserving the button's accessible name. The button stays " +
+          'focusable and exposes `aria-busy` and `aria-disabled`; clicking it, or pressing ' +
+          'Enter or Space, does nothing until loading ends. The spinner is `aria-hidden`.',
       },
       source: {
         language: 'html',
