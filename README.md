@@ -18,13 +18,14 @@ The goal is not a large catalog. Each component is treated as a public contract:
 
 ## Components
 
-| Component     | Renders              | Summary                                                                                       |
-| ------------- | -------------------- | --------------------------------------------------------------------------------------------- |
-| `NuiButton`   | `<button>`           | Variants, sizes, loading state, `start`/`end` slots for icons, icon-only sizing               |
-| `NuiInput`    | `<input>`            | Text-like input primitive with `v-model`, sizes and an invalid state                          |
-| `NuiTextarea` | `<textarea>`         | Multiline primitive; height comes from native `rows`                                          |
-| `NuiSelect`   | `<select>`           | Single selection with native `<option>` and `<optgroup>` children                             |
-| `NuiField`    | label, helper, error | Wires a label, helper text, error message and required state to one input, textarea or select |
+| Component     | Renders                | Summary                                                                                       |
+| ------------- | ---------------------- | --------------------------------------------------------------------------------------------- |
+| `NuiButton`   | `<button>`             | Variants, sizes, loading state, `start`/`end` slots for icons, icon-only sizing               |
+| `NuiInput`    | `<input>`              | Text-like input primitive with `v-model`, sizes and an invalid state                          |
+| `NuiTextarea` | `<textarea>`           | Multiline primitive; height comes from native `rows`                                          |
+| `NuiSelect`   | `<select>`             | Single selection with native `<option>` and `<optgroup>` children                             |
+| `NuiCheckbox` | `<input>` in `<label>` | Native boolean checkbox with its own visible label, required text and an invalid state        |
+| `NuiField`    | label, helper, error   | Wires a label, helper text, error message and required state to one input, textarea or select |
 
 The input, textarea and select are primitives: they render no label or error text. Use `NuiField`, or your own `<label for>`.
 
