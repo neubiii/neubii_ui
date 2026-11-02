@@ -25,6 +25,7 @@ The goal is not a large catalog. Each component is treated as a public contract:
 | `NuiTextarea` | `<textarea>`           | Multiline primitive; height comes from native `rows`                                          |
 | `NuiSelect`   | `<select>`             | Single selection with native `<option>` and `<optgroup>` children                             |
 | `NuiCheckbox` | `<input>` in `<label>` | Native boolean checkbox with its own visible label, required text and an invalid state        |
+| `NuiRadio`    | `<input>` in `<label>` | Native radio with its own visible label; grouped by a shared `name` and `v-model`             |
 | `NuiField`    | label, helper, error   | Wires a label, helper text, error message and required state to one input, textarea or select |
 
 The input, textarea and select are primitives: they render no label or error text. Use `NuiField`, or your own `<label for>`.

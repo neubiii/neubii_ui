@@ -20,7 +20,7 @@ const meta = {
         component:
           'A native `<input type="checkbox">` with its own visible label. The browser draws ' +
           'the box, the check mark and the hover, active, disabled and forced-colors ' +
-          'states; `--nui-color-checkbox-accent` themes the checked state through ' +
+          'states; `--nui-color-selection-accent` themes the checked state through ' +
           '`accent-color`. Space toggles a focused checkbox, and clicking anywhere on the ' +
           'label toggles it too.\n\n' +
           '**Label.** The default slot is the visible label. The input is nested in the ' +

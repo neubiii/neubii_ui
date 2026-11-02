@@ -43,8 +43,8 @@
   --nui-color-field-placeholder: var(--nui-color-gray-600);
   --nui-color-field-error-text: var(--nui-color-red-600);
 
-  /* Checked state of the natively rendered checkbox, applied through accent-color. */
-  --nui-color-checkbox-accent: var(--nui-color-gray-800);
+  /* Checked state of the natively rendered checkbox and radio, applied through accent-color. */
+  --nui-color-selection-accent: var(--nui-color-gray-800);
 
   --nui-color-focus-ring: var(--nui-color-blue-600);
 
