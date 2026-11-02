@@ -113,7 +113,7 @@ function onChange(event: Event) {
 .nui-checkbox__input {
   margin: 0;
   cursor: inherit;
-  accent-color: var(--nui-color-checkbox-accent);
+  accent-color: var(--nui-color-selection-accent);
 }
 
 /* An outline, because a natively rendered checkbox has no styleable border. */
