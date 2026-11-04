@@ -5,8 +5,9 @@ import { ref } from 'vue'
 import NuiButton from '../NuiButton/NuiButton.vue'
 import NuiRadio from './NuiRadio.vue'
 
-// A radio is only meaningful in a group, so the stories render several NuiRadio components
-// inside plain consumer <fieldset> and <legend> markup. `args` apply to every radio of the
+// A radio is only meaningful in a group. These stories document NuiRadio's own contract, so
+// they render several NuiRadio components inside plain consumer <fieldset> and <legend>
+// markup; NuiRadioGroup has its own stories. `args` apply to every radio of the
 // group; each radio sets its own `value` after `v-bind="args"`. The legend and the options
 // live in story `parameters`, not `args`, so they never reach the component as attributes.
 //
@@ -48,8 +49,11 @@ const meta = {
           'The browser keeps one of them checked, Tab enters the group at the checked radio, ' +
           'the arrow keys move to and select the next or previous radio, and Space selects ' +
           'the focused one. Give every radio of a group the same `name`, the same `v-model` ' +
-          'and its own `value`. There is no group component: wrap the radios in a ' +
-          '`<fieldset>` whose `<legend>` names the question.\n\n' +
+          'and its own `value`. For a labeled question, use ' +
+          '[NuiRadioGroup](?path=/docs/components-nuiradiogroup--docs): it renders the ' +
+          '`<fieldset>` and `<legend>` and passes the shared `name`, model and `required` to ' +
+          'each radio. The stories below wire the group by hand to show what NuiRadio itself ' +
+          'expects.\n\n' +
           '**Model.** `v-model` is required and holds a string: the `value` of the selected ' +
           'radio, or `undefined` while none is selected. A radio is checked exactly when ' +
           '`v-model === value`, and selecting it sets `v-model` to its `value`. A model is ' +
@@ -67,11 +71,11 @@ const meta = {
           'other attribute and listener, such as `aria-describedby`, `form` or `@change`, ' +
           'applies to the `<input>`. Fallthrough attributes cannot change `type`, `checked` ' +
           'or `id`.\n\n' +
-          '**Consumer responsibilities.** The group label, the required indicator and any ' +
-          'helper or error text belong to the group, not to one option: put them in the ' +
-          '`<legend>` and next to the fieldset. NuiRadio has no `invalid` state for the same ' +
-          'reason. It is not designed for NuiField, and it must not be wrapped in another ' +
-          '`<label>`.',
+          '**Group responsibilities.** The group label, the required indicator and any ' +
+          'helper or error text belong to the group, not to one option: NuiRadioGroup renders ' +
+          'them, or put them in your own `<legend>` and next to the fieldset. NuiRadio has no ' +
+          '`invalid` state for the same reason. It is not designed for NuiField, and it must ' +
+          'not be wrapped in another `<label>`.',
       },
     },
   },
