@@ -22,5 +22,8 @@ export type { NuiCheckboxProps } from './components/NuiCheckbox'
 export { NuiRadio } from './components/NuiRadio'
 export type { NuiRadioProps } from './components/NuiRadio'
 
+export { NuiRadioGroup } from './components/NuiRadioGroup'
+export type { NuiRadioGroupProps, NuiRadioGroupRadioProps } from './components/NuiRadioGroup'
+
 export { NuiField } from './components/NuiField'
 export type { NuiFieldControlProps, NuiFieldProps } from './components/NuiField'
