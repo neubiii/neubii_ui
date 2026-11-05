@@ -19,6 +19,12 @@ export type { NuiSelectProps, NuiSelectSize } from './components/NuiSelect'
 export { NuiCheckbox } from './components/NuiCheckbox'
 export type { NuiCheckboxProps } from './components/NuiCheckbox'
 
+export { NuiCheckboxGroup } from './components/NuiCheckboxGroup'
+export type {
+  NuiCheckboxGroupCheckboxProps,
+  NuiCheckboxGroupProps,
+} from './components/NuiCheckboxGroup'
+
 export { NuiRadio } from './components/NuiRadio'
 export type { NuiRadioProps } from './components/NuiRadio'
 
