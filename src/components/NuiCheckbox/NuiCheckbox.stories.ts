@@ -39,9 +39,10 @@ const meta = {
           'applies to the `<input>`. Fallthrough attributes cannot change `type`, `checked` ' +
           'or `id`.\n\n' +
           '**Consumer responsibilities.** Helper and error text are plain consumer markup, ' +
-          'linked with `aria-describedby`. Group related checkboxes with `<fieldset>` and ' +
-          '`<legend>`. NuiCheckbox is not designed for NuiField, and it must not be wrapped ' +
-          'in another `<label>`.',
+          'linked with `aria-describedby`. Group related checkboxes with ' +
+          '[NuiCheckboxGroup](?path=/docs/components-nuicheckboxgroup--docs), or with your own ' +
+          '`<fieldset>` and `<legend>`. NuiCheckbox is not designed for NuiField, and it must ' +
+          'not be wrapped in another `<label>`.',
       },
     },
   },
